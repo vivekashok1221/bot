@@ -8,18 +8,13 @@ By default, the values defined in the classes are used, these can be overridden 
 import os
 from enum import Enum
 
-from pydantic import BaseModel, BaseSettings, root_validator
+from pydantic import model_validator, BaseModel
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class EnvConfig(BaseSettings):
     """Our default configuration for models that should load from .env files."""
-
-    class Config:
-        """Specify what .env files to load, and how to load them."""
-
-        env_file = ".env.server", ".env",
-        env_file_encoding = "utf-8"
-        env_nested_delimiter = "__"
+    model_config = SettingsConfigDict(env_file=".env.server", ".env",, env_file_encoding="utf-8", env_nested_delimiter="__")
 
 
 class _Miscellaneous(EnvConfig):
@@ -321,7 +316,8 @@ class _Colours(EnvConfig):
     white = 0xfffffe
     yellow = 0xffd241
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
+    @classmethod
     def parse_hex_values(cls, values: dict) -> dict:  # noqa: N805
         """Convert hex strings to ints."""
         for key, value in values.items():

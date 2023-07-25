@@ -20,10 +20,10 @@ class Nomination(BaseModel):
     user_id: int = Field(alias="user")
     inserted_at: datetime
     end_reason: str
-    ended_at: datetime | None
+    ended_at: datetime | None = None
     entries: list[NominationEntry]
     reviewed: bool
-    thread_id: int | None
+    thread_id: int | None = None
 
 
 class NominationAPI:

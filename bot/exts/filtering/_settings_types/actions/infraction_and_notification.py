@@ -6,7 +6,7 @@ import discord.abc
 from dateutil.relativedelta import relativedelta
 from discord import Colour, Embed, Member, User
 from discord.errors import Forbidden
-from pydantic import validator
+from pydantic import field_validator
 from pydis_core.utils.logging import get_logger
 from pydis_core.utils.members import get_or_fetch_member
 
@@ -151,7 +151,8 @@ class InfractionAndNotification(ActionEntry):
     infraction_duration: InfractionDuration
     infraction_channel: int
 
-    @validator("infraction_type", pre=True)
+    @field_validator("infraction_type", mode="before")
+    @classmethod
     @classmethod
     def convert_infraction_name(cls, infr_type: str | Infraction) -> Infraction:
         """Convert the string to an Infraction by name."""
